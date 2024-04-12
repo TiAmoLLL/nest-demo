@@ -5,6 +5,7 @@ import * as svgCaptcha from 'svg-captcha'
 
 @Injectable()
 export class UserService {
+  // 创建一个CodeGeeX类型的变量captcha，调用svgCaptcha的create方法，传入参数，然后返回captcha
   createCode() {
     const captcha = svgCaptcha.create({
       size: 4,//生成几个验证码
