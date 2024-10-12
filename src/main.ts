@@ -16,12 +16,14 @@ async function bootstrap() {
   const whiteList = ['/user/getUser']
   // 使用NestFactory创建一个NestExpressApplication实例
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-
+  app.setGlobalPrefix('api');
 
   // 中间件，用于控制全局路由
   const middleWareAll = (req: Request, res: Response, next: NextFunction) => {
     // 打印出请求的原始URL
-    console.log(req.originalUrl, '我收全局的')
+    console.log('请求头:', req.headers);  // 打印请求头以检查 token
+    // console.log(req.originalUrl, '我收全局的')
+    console.log('中间件，用于控制全局路由,我收全局的')
 
     // 拦截
     if (true) {
@@ -52,7 +54,7 @@ async function bootstrap() {
   // 使用SwaggerModule创建文档
   const documents = SwaggerModule.createDocument(app, options);
   // 设置SwaggerModule，并启动
-  SwaggerModule.setup("api", app, documents);
+  SwaggerModule.setup("docs", app, documents);
 
   // 使用 cors 中间件，允许跨域请求
   app.use(cors());
