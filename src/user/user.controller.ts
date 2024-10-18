@@ -14,6 +14,8 @@ import {
   HttpCode,
   Session,
   UseGuards,
+  Put,
+
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -39,48 +41,50 @@ export class UserController {
       data: this.userService.getUser() // 调用userService中的getUser方法
     }
   }
+  @ApiOperation({ summary: "info" }) // 使用@ApiOperation装饰器为每个请求方法添加描述，提高文档的可读性：
+
+  @Get('info')
+  getInfo(@Req() req) {
+    return {
+      code: 200,
+      message: 'success',
+      success: true,
+    }
+  }
 
 
-  // @ApiTags("添加用户")
+
   @ApiOperation({ summary: "添加用户" })
   @Post('create')
-  create(@Req() req, @Body() body) {
-    // 
+  @HttpCode(200)
+  async create(@Req() req, @Body() body) {
     console.log('添加用户');
-
-    console.log(req, body)
-    const params: User = {
-      account: 'admin',
-      password: 'password',
-      username: 'admin',
-      role: '1'
-
-    }
-    return this.userService.create(params);
-    // return this.userService.create(req);
+    console.log(body)
+    const result = await this.userService.create(body);
+    return result
   }
-  // @ApiTags("通过id查找指定用户")
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.userService.findOne(+id);
-  // }
 
-  // @Post()
-  // create(@Body() createUserDto: CreateUserDto) {
-  //   // return this.userService.create(createUserDto);
-  //   console.log(typeof createUserDto)
-  //   return {
-  //     code: 200,
-  //     "data": createUserDto
-  //   }
-  // }
-  @ApiTags("获取所有用户")
-  // @UseGuards(JwtAuthGuard) // 使用 JWT 守卫(jwt保护)
+
+  @ApiOperation({ summary: "删除用户" })
+  @Delete('delete/:id')
+  @HttpCode(200)
+  async delete(@Param('id') id: number) {
+    console.log('接收到的删除请求，用户 ID:', id);
+
+    // 调用 service 的 delete 方法来删除用户
+    const result = await this.userService.delete(id);
+
+    // 返回结果
+    return result
+  }
+
+
+  @ApiOperation({ summary: "获取用户" })
   @Get('findAll')
   @HttpCode(200)
   async findAll(@Query() query) {
     // console.log(await this.userService.findAll(query))
-    console.log('获取所有用户')
+    console.log('获取用户',query)
     // return this.userService.findAll();
     return {
       code: 200,
@@ -91,17 +95,20 @@ export class UserController {
   }
 
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-  //   // return this.userService.update(+id, updateUserDto);
-  //   console.log(id,
-  //     updateUserDto)
-  //   return {
-  //     code: 200,
-  //     id,
-  //     data: updateUserDto
-  //   }
-  // }
+  @ApiOperation({ summary: "修改用户信息" })
+  @Put('update')
+  @HttpCode(200)
+  update(@Req() req, @Body() body) {
+    // return this.userService.update(+id, updateUserDto);
+    console.log('修改用户信息');
+
+    console.log(body)
+    const result = this.userService.update(body)
+    return {
+      code: 200,
+      data: "测试"
+    }
+  }
 
   // @Delete(':id')
   // remove(@Param('id') id: string) {

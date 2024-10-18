@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service'; // 引入用户服务
 import * as svgCaptcha from 'svg-captcha'
 import * as bcrypt from 'bcryptjs';
+import e from 'express';
 
 @Injectable()
 export class AuthService {
@@ -42,9 +43,16 @@ export class AuthService {
         console.log(user, '登录，生成 JWT 令牌');
 
         const payload = { account: user.account, sub: user.userId }; // 定义 JWT payload
-        return {
-            user,
-            access_token: this.jwtService.sign(payload), // 签发 JWT
-        };
+        if (user.code === 401) {
+            return {
+                code: 401,
+            }
+        } else {
+            return {
+                user,
+                access_token: this.jwtService.sign(payload), // 签发 JWT
+            };
+        }
+
     }
 }

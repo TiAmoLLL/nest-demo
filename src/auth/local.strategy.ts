@@ -13,8 +13,13 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
         console.log('使用 Local 认证守卫');
 
         const user = await this.authService.validateUser(account, password);
+        console.log(user);
+
         if (!user) {
-            throw new UnauthorizedException(); // 如果用户不存在或密码不匹配，抛出异常
+            return {
+                code: 401
+            }
+            // throw new UnauthorizedException({ statusCode: 200, message: "账号或密码错误" }); // 如果用户不存在或密码不匹配，抛出异常
         }
         return user;
     }

@@ -4,6 +4,7 @@ import { jwtConstants } from '../auth/constants'; // 导入你的 JWT 密钥
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
   use(req: any, res: any, next: () => void) {
+    // next();
     // 获取 x-token
     const token = req.headers['x-token']?.split(' ')[1]; // 解析出 Bearer 后的 token
     // console.log(req.headers, '中间件')
@@ -26,7 +27,8 @@ export class LoggerMiddleware implements NestMiddleware {
 
       // next(); // 验证通过，继续处理请求
     })
-    // res.send('请求拦截')
-    // next();
+
+
+
   }
 }

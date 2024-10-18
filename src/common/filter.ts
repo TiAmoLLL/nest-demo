@@ -15,6 +15,7 @@ export class HttpFilter implements ExceptionFilter {
 
         // 获取异常状态码
         const status = exception.getStatus()
+        console.log(exception, "捕捉异常");
 
         // 设置响应状态码，返回JSON数据
         response.status(status).json({
@@ -22,7 +23,7 @@ export class HttpFilter implements ExceptionFilter {
             time: new Date().getTime(),
             success: false,
             path: request.url,
-            status
+            code: status
         })
     }
 }

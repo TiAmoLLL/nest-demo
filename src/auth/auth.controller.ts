@@ -12,14 +12,25 @@ export class AuthController {
     @Post('login')
     @HttpCode(200)
     async login(@Request() req) {
-        console.log('登录接口', this.authService.login(req.user));
-        return {
-            code: 200,
-            message: 'success',
-            success: true,
-            data: await this.authService.login(req.user) // 登录成功，返回 JWT
+        const loginResult = await this.authService.login(req.user);
+
+        console.log(loginResult, '登录接口');
+        if (loginResult.code === 401) {
+            return {
+                code: 401,
+                message: '账号或密码不正确',
+                success: false,
+                data: {}
+            }
+        } else {
+            return {
+                code: 200,
+                message: 'success',
+                success: true,
+                data: loginResult // 登录成功，返回 JWT
+            }
         }
-        // return this.authService.login(req.user); // 登录成功，返回 JWT
+
     }
     @ApiTags("获取验证码")
     @ApiOperation({ summary: "获取验证码" })
