@@ -12,6 +12,7 @@ import { User } from './entities/user.entity';
   exports: [UserService]
 })
 export class UserModule implements NestModule {
+  // 中间件，token验证
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(LoggerMiddleware).forRoutes('user')
   }

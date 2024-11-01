@@ -3,25 +3,25 @@ import { v4 as uuidv4 } from 'uuid';
 @Entity()
 export class User {
     //自增列
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn({ comment: 'id' })
     id?: number;
 
     // UUID 列
     // UUID 列
-    @Column({ type: 'uuid', unique: true })
+    @Column({ type: 'uuid', unique: true, comment: "uuid" })
     uuid?: string;
     //普通列
     // 账号
-    @Column()
+    @Column({ comment: '账号' })
     account: string
     // 密码
-    @Column()
+    @Column({ comment: '密码' })
     password: string
 
-    @Column()
+    @Column({ comment: '用户名' })
     username: string
 
-    @Column()
+    @Column({ comment: '角色' })
     role: string
 
     constructor(account: string, password: string, username: string, role: string) {

@@ -6,6 +6,7 @@ import { UserModule } from './user/user.module';
 import { UploadModule } from './upload/upload.module';
 import { GuardModule } from './guard/guard.module';
 import { AuthModule } from './auth/auth.module';
+import { GoodsModule } from './goods/goods.module';
 
 @Module({
   imports: [
@@ -27,7 +28,8 @@ import { AuthModule } from './auth/auth.module';
 
     }),
     GuardModule,
-    AuthModule
+    AuthModule,
+    GoodsModule
   ],
   controllers: [AppController],
   providers: [AppService],

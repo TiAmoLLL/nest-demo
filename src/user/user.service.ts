@@ -5,26 +5,36 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { Repository, Like, FindOptionsWhere, getConnection } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ReturnType } from '../types/return-type.interface';
 import * as bcrypt from 'bcryptjs';
-interface retuenData {
-  code: number,
-  message: string,
-  success: boolean,
-  data: {} | string | []
-}
+
 @Injectable()
 export class UserService {
 
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
-    // @InjectRepository(Tags) private readonly tag: Repository<Tags>
   ) { }
 
+  // 登录验证
+  async findOneByAccount(account: string) {
+    const whereCondition: FindOptionsWhere<User> = { account: account }; // 通过 account 字段精确匹配
 
-  getUser() {
-    return 'hello world! this is get user'
+    const user = await this.userRepository.findOne({
+      where: whereCondition,
+      order: {
+        id: "DESC",
+      },
+    });
+
+    if (!user)
+      return null
+    else
+      return user; // 直接返回匹配的用户，若无匹配则返回 null
+
   }
-  async create(user: User) {
+
+  // 用户管理
+  async create(user: CreateUserDto): Promise<ReturnType> {
     console.log(user);
 
     const saltRounds = 10;
@@ -70,7 +80,7 @@ export class UserService {
 
 
   }
-  async delete(id: number): Promise<any> {
+  async delete(id: number): Promise<ReturnType> {
     // 检查用户是否存在
     const user = await this.userRepository.findOne({ where: { id } });
     if (!user) {
@@ -101,7 +111,7 @@ export class UserService {
       }
     }
   }
-  async findAll(query: { account: string; page: number; pageSize: number }) {
+  async findAll(query: { account: string; page: number; pageSize: number }): Promise<ReturnType> {
     const { account, page = 1, pageSize = 20 } = query;
 
     const usersQuery = this.userRepository.createQueryBuilder('user');
@@ -123,33 +133,21 @@ export class UserService {
     const total = await usersQuery.getCount(); // 使用相同的查询条件
 
     return {
-      records: safeRecords,
-      total,
-    };
+      code: 200,
+      message: 'success',
+      success: true,
+      data: {
+        records: safeRecords,
+        total,
+      }
+    }
   }
 
 
-  async findOneByAccount(account: string) {
-    const whereCondition: FindOptionsWhere<User> = { account: account }; // 通过 account 字段精确匹配
 
-    const user = await this.userRepository.findOne({
-      where: whereCondition,
-      order: {
-        id: "DESC",
-      },
-    });
 
-    if (!user)
-      return null
-    else
-      return user; // 直接返回匹配的用户，若无匹配则返回 null
 
-  }
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
-
-  async update(user: User): Promise<retuenData> {
+  async update(user: UpdateUserDto): Promise<ReturnType> {
     // Step 1: 查找用户
     const userInfo = await this.userRepository.findOne({ where: { id: user.id } });
     if (!userInfo) {
