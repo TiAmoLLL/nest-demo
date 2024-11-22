@@ -80,7 +80,7 @@ export class UserService {
 
 
   }
-  async delete(id: number): Promise<ReturnType> {
+  async remove(id: number): Promise<ReturnType> {
     // 检查用户是否存在
     const user = await this.userRepository.findOne({ where: { id } });
     if (!user) {

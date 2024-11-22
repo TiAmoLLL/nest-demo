@@ -14,6 +14,6 @@ export class GoodsModule implements NestModule {
 
   // 中间件，token验证
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleware).forRoutes('user')
+    consumer.apply(LoggerMiddleware).forRoutes('goods')
   }
 }

@@ -4,9 +4,25 @@ import { Response } from 'express';
 import { join } from 'path';
 import { CreateUploadDto } from './dto/create-upload.dto';
 import { UpdateUploadDto } from './dto/update-upload.dto';
-
+import { ReturnType } from '../types/return-type.interface';
 @Injectable()
 export class UploadService {
+  async upload(file: any): Promise<ReturnType> {
+    console.log('上传file', file);
+    const filePath = join(__dirname, '../file', file.filename);
+    return {
+      code: 200,
+      message: '文件上传成功',
+      success: true,
+      data: {
+        originalName: file.originalname,
+        filename: file.filename,
+        path: "/file/" + file.filename,
+        size: file.size,
+        mimetype: file.mimetype,
+      },
+    }
+  }
   download(name: string) {
 
   }

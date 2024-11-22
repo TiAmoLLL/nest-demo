@@ -41,11 +41,11 @@ export class UserController {
   @ApiOperation({ summary: "删除用户" })
   @Delete('delete/:id')
   @HttpCode(200)
-  async delete(@Param('id') id: number): Promise<ReturnType> {
+  async remove(@Param('id') id: number): Promise<ReturnType> {
     console.log('接收到的删除请求，用户 ID:', id);
 
     // 调用 service 的 delete 方法来删除用户
-    const result = await this.userService.delete(id);
+    const result = await this.userService.remove(id);
 
     // 返回结果
     return result

@@ -7,18 +7,27 @@ import { zip } from 'compressing'
 import { Response } from 'express';
 import { ApiTags } from '@nestjs/swagger';
 import { join } from 'path';
-
+import { ReturnType } from '../types/return-type.interface';
 @ApiTags("文件上传")
-@Controller()
+@Controller('file')
 export class UploadController {
   constructor(private readonly uploadService: UploadService) { }
 
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
-  upload(@UploadedFile() file) {
+  async upload(@UploadedFile() file): Promise<ReturnType> {
     console.log(file)
-    // return this.uploadService.create(createUploadDto); 
-    return '测试上传'
+    // 检查文件是否上传成功
+    if (!file) {
+      return {
+        code: 400,
+        message: 'No file uploaded',
+        success: false,
+        data: 'No file uploaded'
+      };
+    }
+    return this.uploadService.upload(file);
+
   }
 
   @Get('download')
