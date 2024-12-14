@@ -1,4 +1,4 @@
-import { Injectable, NestMiddleware, UnauthorizedException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NestMiddleware, UnauthorizedException } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
 import { jwtConstants } from '../auth/constants'; // 导入你的 JWT 密钥
 @Injectable()
@@ -23,9 +23,22 @@ export class LoggerMiddleware implements NestMiddleware {
       console.log('Token decoded:', decoded);
       // 可以在请求对象中添加用户信息
       req.user = decoded; // 将解码后的用户信息附加到请求中
+      const userRole = req.user.role;
+      // 判断用户是否有权限
+      if (userRole === 'admin') {
+        console.log('后台用户');
+      } else if (userRole === 'frontend') {
+        console.log('前台用户');
+      }
+      // 根据用户角色限制接口访问
+      if (req.originalUrl.startsWith('/admin') && userRole !== 'admin') {
+        throw new ForbiddenException('后台接口仅限管理员访问');
+      } else if (req.originalUrl.startsWith('/frontend') && userRole !== 'frontend') {
+        throw new ForbiddenException('前台接口仅限前端用户访问');
+      }
       next(); // 验证通过，继续处理请求
 
-      // next(); // 验证通过，继续处理请求
+
     })
 
 

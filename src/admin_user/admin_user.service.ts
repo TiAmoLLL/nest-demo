@@ -1,23 +1,23 @@
 import { HttpException, Injectable, HttpStatus } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateAdminUserDto } from './dto/create-admin_user.dto';
+import { UpdateAdminUserDto } from './dto/update-admin_user.dto';
 
-import { User } from './entities/user.entity';
+import { AdminUser } from './entities/admin_user.entity';
 import { Repository, Like, FindOptionsWhere, getConnection } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ReturnType } from '../types/return-type.interface';
 import * as bcrypt from 'bcryptjs';
 
 @Injectable()
-export class UserService {
+export class AdminUserService {
 
   constructor(
-    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    @InjectRepository(AdminUser) private readonly userRepository: Repository<AdminUser>,
   ) { }
 
   // 登录验证
   async findOneByAccount(account: string) {
-    const whereCondition: FindOptionsWhere<User> = { account: account }; // 通过 account 字段精确匹配
+    const whereCondition: FindOptionsWhere<AdminUser> = { account: account }; // 通过 account 字段精确匹配
 
     const user = await this.userRepository.findOne({
       where: whereCondition,
@@ -34,11 +34,11 @@ export class UserService {
   }
 
   // 用户管理
-  async create(user: CreateUserDto): Promise<ReturnType> {
+  async create(user: CreateAdminUserDto): Promise<ReturnType> {
     console.log(user);
 
     const saltRounds = 10;
-    const params: User = new User(user.account, await bcrypt.hash(user.password, saltRounds), user.username, user.role);
+    const params: AdminUser = new AdminUser(user.account, await bcrypt.hash(user.password, saltRounds), user.username, user.role);
     console.log(params);
     // 检查账号是否已经存在
     const existingUser = await this.userRepository.findOne({
@@ -147,7 +147,7 @@ export class UserService {
 
 
 
-  async update(user: UpdateUserDto): Promise<ReturnType> {
+  async update(user: UpdateAdminUserDto): Promise<ReturnType> {
     // Step 1: 查找用户
     const userInfo = await this.userRepository.findOne({ where: { id: user.id } });
     if (!userInfo) {
@@ -169,11 +169,12 @@ export class UserService {
     // 使用 `Object.assign` 方法将 `updateUserDto` 中的新数据赋值给 `user` 实例
     // Step 2: 更新用户信息
     // 使用 `Object.assign` 方法将新数据赋值给 `existingUser`
+    // TODO:密码未加密
     Object.assign(userInfo, user); // 将传入的用户数据合并到现有用户中
 
     // Step 3: 保存更新后的用户信息
     try {
-      // TODO:密码未加密
+
       const updatedUser = await this.userRepository.save(userInfo);
       return {
         code: 200,

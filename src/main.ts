@@ -21,7 +21,7 @@ async function bootstrap() {
   // 中间件，用于控制全局路由
   const middleWareAll = (req: Request, res: Response, next: NextFunction) => {
     // 打印出请求的原始URL
-    console.log('请求头:', req.headers);  // 打印请求头以检查 token
+    // console.log('请求头:', req.headers);  // 打印请求头以检查 token
     // console.log(req.originalUrl, '我收全局的')
     console.log('中间件，用于控制全局路由,我收全局的')
 
@@ -63,7 +63,8 @@ async function bootstrap() {
   app.use(session({ secret: "TiAmo", name: "TiAmo", rolling: true, cookie: { maxAge: null } }));
 
   // 使用中间件 All
-  app.use(middleWareAll);
+  // app.use(middleWareAll);
+
 
   // 使用静态资源
   app.useStaticAssets(join(__dirname, "file"), {

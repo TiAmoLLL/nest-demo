@@ -2,6 +2,7 @@ import { Controller, Post, Body, Request, UseGuards, Get, Req, Res, Session, Htt
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './local-auth.guard';
+import { ReturnType } from '../types/return-type.interface';
 @ApiTags('登录接口')
 @Controller('auth')
 export class AuthController {
@@ -11,7 +12,9 @@ export class AuthController {
     @UseGuards(LocalAuthGuard) // 使用 Local 认证守卫
     @Post('login')
     @HttpCode(200)
-    async login(@Request() req) {
+    async login(@Request() req): Promise<ReturnType> {
+        console.log(req.user, '登录接口');
+
         const loginResult = await this.authService.login(req.user);
 
         console.log(loginResult, '登录接口');

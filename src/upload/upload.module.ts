@@ -8,10 +8,15 @@ import { LoggerMiddleware } from 'src/logger/logger.middleware';
 
 @Module({
   imports: [MulterModule.register({
+    // 定义存储方式为diskStorage
     storage: diskStorage({
+      // 指定文件存储路径
       destination: join(__dirname, '../file/'),
+      // 指定文件名
       filename: (_, file, callback) => {
+        // 获取当前时间戳
         const fileName = `${new Date().getTime() + extname(file.originalname)}`
+        // 返回文件名
         return callback(null, fileName)
       },
     }),
@@ -31,9 +36,6 @@ import { LoggerMiddleware } from 'src/logger/logger.middleware';
   controllers: [UploadController],
   providers: [UploadService],
 })
-export class UploadModule implements NestModule {
-  // 中间件，token验证
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleware).forRoutes('file')
-  }
+export class UploadModule {
+
 }

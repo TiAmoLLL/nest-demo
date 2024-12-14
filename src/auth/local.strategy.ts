@@ -6,13 +6,18 @@ import { AuthService } from './auth.service';
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
     constructor(private authService: AuthService) {
-        super({ usernameField: 'account' }); // 将默认的 username 字段改为 account 字段
+        super({
+            usernameField: 'account',// 将默认的 username 字段改为 account 字段
+            passReqToCallback: true,   // 允许通过 request 传递参数
+        });
+
     }
 
-    async validate(account: string, password: string): Promise<any> {
-        console.log('使用 Local 认证守卫');
+    async validate(request: any): Promise<any> {
+        console.log('使用 Local 认证守卫', request.body);
+        const { account, password, userType } = request.body
 
-        const user = await this.authService.validateUser(account, password);
+        const user = await this.authService.validateUser(account, password, userType);
         console.log(user);
 
         if (!user) {
