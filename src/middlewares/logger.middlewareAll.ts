@@ -8,8 +8,10 @@ export class LoggerMiddlewareAll implements NestMiddleware {
         // 获取 x-token
         console.log('全局中间件', req.originalUrl, req.originalUrl.startsWith('/admin'))
         // console.log(req.headers, '中间件')
-        if (req.originalUrl === '/api/auth/login')
+        if (req.originalUrl === '/api/auth/login'){
+            console.log("判断是登录接口")
             return next()
+        }
         const token = req.headers['x-token']?.split(' ')[1]; // 解析出 Bearer 后的 token
         if (!token) {
             throw new UnauthorizedException('Token不存在');

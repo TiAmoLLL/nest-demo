@@ -36,6 +36,21 @@ export class AdminUserController {
     const result = await this.userService.create(createUserDto);
     return result
   }
+  @ApiOperation({ summary: "添加默认用户" })
+  @Post('createAdmin')
+  @HttpCode(200)
+  async createAdmin(): Promise<ReturnType> {
+    console.log('添加用户');
+    
+    const createUserDto:CreateAdminUserDto = {
+      account:'admin',
+      username:'admin',
+      password:'password',
+      role:'admin'
+    }
+    const result = await this.userService.create(createUserDto);
+    return result
+  }
 
 
   @ApiOperation({ summary: "删除用户" })

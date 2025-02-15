@@ -22,7 +22,7 @@ async function bootstrap() {
   const middleWareAll = (req: Request, res: Response, next: NextFunction) => {
     // 打印出请求的原始URL
     // console.log('请求头:', req.headers);  // 打印请求头以检查 token
-    // console.log(req.originalUrl, '我收全局的')
+    
     console.log('中间件，用于控制全局路由,我收全局的')
 
     // 拦截

@@ -37,7 +37,7 @@ export class AuthService {
             user = await this.userService.findOneByAccount(account);
         }
 
-        console.log('user', user,);
+        console.log('user-----', user, pass);
 
         if (user && await bcrypt.compare(pass, user.password)) { // 验证密码
             const { password, ...result } = user;

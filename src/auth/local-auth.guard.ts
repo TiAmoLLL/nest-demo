@@ -11,6 +11,7 @@ export class LocalAuthGuard extends AuthGuard('local') {
     // 重写 canActivate 方法
     canActivate(context: any): boolean | Promise<boolean> | Observable<boolean> {
         const request = context.switchToHttp().getRequest();
+        
         console.log('LocalAuthGuard 开始验证...', request.body);
         // 假设你从请求体或请求头中获取 userType
         const userType = request.body.userType || request.headers['user-type'];  // 根据实际情况获取
